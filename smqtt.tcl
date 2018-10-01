@@ -4,6 +4,7 @@ package require toclbox
 namespace eval ::smqtt {
     namespace eval vars {
         variable -keepalive  60
+        variable -retransmit 5000
         variable -name       "%hostname%-%pid%-%prgname%"
         variable -clean      on
         variable -retry      "100:120000"
@@ -156,6 +157,7 @@ proc ::smqtt::Connect { o { force 0 } } {
                                 -password [dict get $broker "pwd"] \
                                 -socketcmd $cmd \
                                 -keepalive [dict get $context -keepalive] \
+                                -retransmit [dict get $context -retransmit] \
                                 -clean [dict get $context -clean]]
 
         # Generate client name

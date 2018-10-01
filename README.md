@@ -143,6 +143,11 @@ This should be an integer and the maximum number of messages to enqueue while
 disconnected from the server. A negative number supporesses enqueuing mechanisms
 entirely.
 
+#### `-retransmit`
+
+Number of millseconds between data sending retransmits whenever using QoS higher
+than `0`.
+
 #### `-cadir`, `-cafile`, `-certfile`, `-cipher`, `-dhparams`, `-keyfile`, `-password`, `-request`, `-require`
 
 When present and non-empty the value of this option and the option itself will
