@@ -3,7 +3,7 @@
 This repository provides a slightly modified version of this excellent mqtt
 [implementation][mqtt], together with a higher-level wrapper. The wrapper
 requires [toclbox] to function properly. This documentation focuses mainly on
-the wrapper as the underlying library is documentated on the and original site.
+the wrapper as the underlying library is documentated at the original site.
 
   [mqtt]: https://chiselapp.com/user/schelte/repository/mqtt
   [toclbox]: https://github.com/efrecon/toclbox 
@@ -12,11 +12,11 @@ the wrapper as the underlying library is documentated on the and original site.
 
 This library provides a new option to the main `mqtt` command called
 `-socketcmd`. This command will be used to open the connection to the remote
-MQTT broker and is meant to facilitate use of [TLS] for securing connections.
-By default, `-socketcmd` is set to `socket`, thus providing the same behaviour
-as the original implementation. The command can instead be set to an invokation
-of `::tls::socket` making it easy to open connection to TLS-secured MQTT
-brokers, usually running on port `8883`.
+MQTT broker and is meant to facilitate use of [TLS] for securing connections. By
+default, `-socketcmd` is set to `socket`, thus providing the same behaviour as
+the original implementation. The command can instead be set to an invokation of
+`::tls::socket` making it easy to open connections to remotely facing
+TLS-secured MQTT brokers, usually running on port `8883`.
 
   [TLS]: https://tcltls.rkeene.org/
 
@@ -67,7 +67,7 @@ set c [smqtt new test.mosquitto.org]
 set c [smqtt new mqtt://test.mosquitto.org:1883]
 ```
 
-And, provided that `mosquitto.org.crt` points to the certificate authority for
+And, provided that `mosquitto.org.crt` points to the certificate authority
 [file](http://test.mosquitto.org/ssl/mosquitto.org.crt) for the mosquitto
 server, the following command would open en encrypted connection to the same
 server:
@@ -96,7 +96,7 @@ seconds.
 Client identifier to use when connecting to the server. This is not to be
 confused with the username for authentication, which should be specified as part
 of the URL instead. The name will automatically be truncated to the first 23
-characters, as per the specification. In the name, a number of `%` enclosed
+characters, as per the MQTT specification. In the name, a number of `%` enclosed
 token strings will be dynamically replaced by their values at run-time.
 Particular to `smqtt` are the following ones:
 
