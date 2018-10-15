@@ -4,5 +4,5 @@ package ifneeded mqtt 1.2 [subst {
 }]
 package ifneeded smqtt 0.2 [subst {
     source [file join $dir smqtt.tcl]
-    package provide mqtt 0.2
+    package provide smqtt 0.2
 }]
