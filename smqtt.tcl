@@ -19,6 +19,7 @@ namespace eval ::smqtt {
         variable -password   ""
         variable -request    ""
         variable -require    ""
+        variable hijacked    0
     }
     namespace export {[a-z]*}
     namespace ensemble create
@@ -30,6 +31,15 @@ proc ::smqtt::new { broker args } {
     set broker [Broker $broker]
     if { $broker eq "" } {
         return ""
+    }
+
+    # Hijack logging from mqtt to arrange for being able to catch errors at the
+    # TRACE level. This relays to the toclbox logging implementation.
+    if { ! $vars::hijacked } {
+        proc ::mqtt::log { str } {
+            toclbox debug TRACE $str
+        }
+        set vars::hijacked 1
     }
 
     set varname [toclbox::control::identifier [namespace current]::mqtt]
