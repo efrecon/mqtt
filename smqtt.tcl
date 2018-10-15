@@ -95,6 +95,8 @@ proc ::smqtt::send { o topic data {qos 1} {retain 0} } {
             toclbox debug WARN "Could not send to broker: $err"
             Enqueue $o $topic $data $qos $retain
             Connect $o 1; # Force a reconnection
+        } else {
+            toclbox debug DEBUG "Sent [toclbox human $data] to $topic, qos: $qos, retain: $retain"
         }
     }
 }
