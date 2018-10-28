@@ -1,5 +1,6 @@
 package require mqtt
 package require toclbox
+package require toclbox::url 0.2;   # Obfuscation
 
 namespace eval ::smqtt {
     namespace eval vars {
@@ -107,7 +108,7 @@ proc ::smqtt::Enqueue { o topic data qos retain } {
 
     # Append to queue and truncate
     if { [dict get $context -queue] > 0 } {
-        toclbox debug INFO "No/Lost connection to [dict get $context broker], enqueuing for later delivery"
+        toclbox debug INFO "No/Lost connection to [::toclbox::url::obfuscate [dict get $context broker]], enqueuing for later delivery"
         set queue [dict lappend context queue $topic $data $qos $retain]
         if { [llength $queue] > 4*[dict get $context -queue] } {
             toclbox debug WARN "Max queue size [dict get $context -queue] reached, discarding old data"
@@ -127,7 +128,7 @@ proc ::smqtt::Broker { broker } {
             toclbox debug NOTICE "No scheme specification, trying with leading mqtt://"
             set broker "mqtt://$broker"
         } else {
-            toclbox debug ERROR "Broker specification $broker should start with mqtt(s)"
+            toclbox debug ERROR "Broker specification [::toclbox::url::obfuscate $broker] should start with mqtt(s)"
             return ""
         }
     }
@@ -203,7 +204,7 @@ proc ::smqtt::Liveness { o topic dta } {
         "*/connection" {
             switch -- [dict get $dta state] {
                 "connected" {
-                    toclbox debug NOTICE "Connected to broker [dict get $context broker]"
+                    toclbox debug NOTICE "Connected to broker [::toclbox::url::obfuscate [dict get $context broker]]"
                     # If we had data on the queue, flush it
                     if { [llength [dict get $context queue]] } {
                         # Detach and empty the existing queue at once, meaning
@@ -233,9 +234,9 @@ proc ::smqtt::Liveness { o topic dta } {
                         5 "Not authorized"
                     }
                     if { [llength [array names reasons [dict get $dta reason]]] > 0 } {
-                        toclbox debug WARN "Disconnected from broker [dict get $context broker]: $reasons([dict get $dta reason])"
+                        toclbox debug WARN "Disconnected from broker [::toclbox::url::obfuscate [dict get $context broker]]: $reasons([dict get $dta reason])"
                     } else {
-                        toclbox debug WARN "Disconnected from broker [dict get $context broker], code: [dict get $dta reason]"
+                        toclbox debug WARN "Disconnected from broker [::toclbox::url::obfuscate [dict get $context broker]], code: [dict get $dta reason]"
                     }
 
                     # Try to connect again to the server in a little while, this
