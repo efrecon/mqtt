@@ -244,17 +244,19 @@ proc ::smqtt::Liveness { o topic dta } {
                     # context and connection. The current implementation is able
                     # of exponential backoff to minimise the strain on the broker
                     if { [string first ":" [dict get $context -retry]] >= 0 } {
+                        set retry [dict get $context retry]
                         # Use the colon sign to express the minimum time to wait
                         # for reconnection, the maximum and the factor by which
                         # to multiply each time (defaults to twice)
                         lassign [split [dict get $context -retry] ":"] min max factor
                         if { $factor eq "" } { set factor 2 }
-                        if { [dict get $context retry] < 0 } {
+                        set retry [expr {int($retry*$factor)}]
+                        if { $retry < 0 } {
                             dict set context retry $min
-                        } elseif { [dict get $context retry] > $max } {
+                        } elseif { $retry > $max } {
                             dict set context retry $max
                         } else {
-                            dict set context retry [expr {int([dict get $context retry]*$factor)}]
+                            dict set context retry $retry
                         }
                     } else {
                         # Otherwise -retry should just be an integer. Covers for
